@@ -20,7 +20,7 @@ h1 {
     height: 100vh; /* Volledige hoogte van het scherm */
     overflow: scroll;
     background: url('images/background.png') no-repeat center center; /* Verwijderd '../' voor correct pad */
-    background-size: 70%; /* Schaal de afbeelding naar 70% van de containerbreedte */
+    background-size: 79%; /* Schaal de afbeelding naar 70% van de containerbreedte */
     box-sizing: border-box;
 }
 
