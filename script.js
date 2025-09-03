@@ -268,10 +268,13 @@ function makeDraggable() {
                 gear.style.top = `${y}px`;
 
                 const gearId = parseInt(gear.id.split('-')[1], 10);
+                const gearData = gears.find(g => g.id === gearId); // Haal de data op uit de gears-array
+                const halfWidth = (gearData.teeth * 5) / 2;
+                const halfHeight = (gearData.teeth * 5) / 2;
                 const label = document.querySelector(`.gear-label[data-id="${gearId}"]`);
                 if (label) {
-                    label.style.left = `${x + (gear.teeth * 5) / 2 - 10}px`; // Dynamisch centreren
-                    label.style.top = `${y + (gear.teeth * 5) / 2 - 5}px`;  // Dynamisch centreren
+                    label.style.left = `${x + halfWidth - 10}px`; // Dynamisch centreren
+                    label.style.top = `${y + halfHeight - 5}px`;  // Dynamisch centreren
                 }
             };
 
