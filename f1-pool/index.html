@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Poule 2025</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-logo">&#127950; F1 Poule 2025</div>
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showView('races')" id="tab-races">Races</button>
+            <button class="nav-tab" onclick="showView('predict')" id="tab-predict">Voorspel</button>
+            <button class="nav-tab" onclick="showView('stand')" id="tab-stand">Stand</button>
+            <button class="nav-tab" onclick="showView('admin')" id="tab-admin">&#9881;</button>
+        </nav>
+    </header>
+
+    <main class="main">
+
+        <!-- RACES VIEW -->
+        <div id="view-races" class="view active">
+            <div id="next-race-section"></div>
+            <div class="section-title">Alle Races</div>
+            <div id="all-races-list"></div>
+        </div>
+
+        <!-- VOORSPEL VIEW -->
+        <div id="view-predict" class="view">
+            <div class="section-title">Maak je Voorspelling</div>
+            <div id="predict-content">
+                <p class="hint">Selecteer een race hieronder om je voorspelling in te vullen.</p>
+                <div id="predict-race-buttons"></div>
+                <div id="predict-form-area"></div>
+            </div>
+        </div>
+
+        <!-- STAND VIEW -->
+        <div id="view-stand" class="view">
+            <div class="section-title">Klassement 2025</div>
+            <div id="standings-content"></div>
+            <div id="race-detail-section"></div>
+            <div class="btn-group-center">
+                <button class="btn-whatsapp" onclick="shareStandings()">&#128241; Deel stand via WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- ADMIN VIEW -->
+        <div id="view-admin" class="view">
+            <div id="admin-login-section">
+                <div class="card">
+                    <div class="section-title">Admin Toegang</div>
+                    <input type="password" id="admin-pwd-input" placeholder="Wachtwoord" class="form-input">
+                    <button class="btn-primary" onclick="adminLogin()">Inloggen</button>
+                    <p class="hint">Standaard wachtwoord: <strong>f1admin</strong></p>
+                </div>
+            </div>
+
+            <div id="admin-panel" style="display:none">
+                <div class="card">
+                    <div class="section-title">Race Aanmaken</div>
+                    <input type="text" id="new-race-name" placeholder="Race naam (bijv. Bahrain Grand Prix)" class="form-input">
+                    <input type="date" id="new-race-date" class="form-input">
+                    <button class="btn-primary" onclick="createRace()">&#43; Race Aanmaken</button>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">Deelnemers Beheren</div>
+                    <div id="participants-list"></div>
+                    <div class="inline-group">
+                        <input type="text" id="new-participant-name" placeholder="Naam deelnemer" class="form-input flex-1">
+                        <button class="btn-secondary" onclick="addParticipant()">Toevoegen</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">Voorspelling Invoeren (namens deelnemer)</div>
+                    <select id="admin-race-select" class="form-input" onchange="loadAdminPredictForm()">
+                        <option value="">Selecteer race...</option>
+                    </select>
+                    <select id="admin-participant-select" class="form-input" onchange="loadAdminPredictForm()">
+                        <option value="">Selecteer deelnemer...</option>
+                    </select>
+                    <div id="admin-predict-drivers"></div>
+                    <div id="admin-predict-top10" class="top10-slots"></div>
+                    <button class="btn-primary" id="save-prediction-btn" onclick="saveAdminPrediction()" style="display:none">Voorspelling Opslaan</button>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">Uitslag Invoeren</div>
+                    <select id="results-race-select" class="form-input" onchange="loadResultsForm()">
+                        <option value="">Selecteer race...</option>
+                    </select>
+                    <div id="results-drivers-area"></div>
+                    <div id="results-top10-area" class="top10-slots"></div>
+                    <button class="btn-success" id="save-results-btn" onclick="saveResults()" style="display:none">&#10003; Uitslag Opslaan &amp; Scores Berekenen</button>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">WhatsApp Tools</div>
+                    <select id="whatsapp-race-select" class="form-input">
+                        <option value="">Selecteer race...</option>
+                    </select>
+                    <div class="btn-group">
+                        <button class="btn-whatsapp" onclick="shareRaceInvite()">&#128241; Stuur race uitnodiging</button>
+                        <button class="btn-whatsapp" onclick="shareRaceScores()">&#128241; Deel race scores</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">Scoringssysteem</div>
+                    <div class="score-legend">
+                        <div class="score-row"><span>Exacte positie:</span><span class="score-pts">10 punten</span></div>
+                        <div class="score-row"><span>1 positie naast:</span><span class="score-pts">6 punten</span></div>
+                        <div class="score-row"><span>2 posities naast:</span><span class="score-pts">3 punten</span></div>
+                        <div class="score-row"><span>3 posities naast:</span><span class="score-pts">1 punt</span></div>
+                        <div class="score-row"><span>Meer dan 3 naast:</span><span class="score-pts">0 punten</span></div>
+                    </div>
+                    <p class="hint">Punten gelden alleen als de rijder ook daadwerkelijk in de top 10 eindigt.</p>
+                </div>
+
+                <div class="card danger-zone">
+                    <div class="section-title">Gegevens</div>
+                    <button class="btn-danger" onclick="exportData()">&#128229; Exporteer data</button>
+                    <button class="btn-secondary" onclick="importData()">&#128228; Importeer data</button>
+                    <textarea id="import-textarea" class="form-input" placeholder="Plak hier je export data..." style="display:none; min-height:80px; margin-top:8px"></textarea>
+                    <button id="import-confirm-btn" class="btn-primary" onclick="confirmImport()" style="display:none; margin-top:4px">Importeer</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
