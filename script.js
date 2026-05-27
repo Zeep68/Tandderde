@@ -111,23 +111,50 @@ function drawLines() {
         ctx.lineTo(endX, endY);
         ctx.stroke();
 
-        ctx.beginPath();
-        ctx.arc(endX, endY, 5, 0, Math.PI * 2);
+        // Pijl aan eindpunt van lijn
+        const arrowSize = locked ? 14 : 10;
+        const arrowAngle = Math.PI / 6;
         ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+            endX - arrowSize * Math.cos(rad - arrowAngle),
+            endY - arrowSize * Math.sin(rad - arrowAngle)
+        );
+        ctx.lineTo(
+            endX - arrowSize * Math.cos(rad + arrowAngle),
+            endY - arrowSize * Math.sin(rad + arrowAngle)
+        );
+        ctx.closePath();
         ctx.fill();
 
+        // Oranje cirkel op partner middelpunt
         ctx.beginPath();
         ctx.arc(cB.x, cB.y, 6, 0, Math.PI * 2);
         ctx.strokeStyle = '#ffaa00';
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Toon hoek-label naast bevroren tandwiel
+        // Toon hoek-label NAAST de pijl bij bevroren tandwielen
         if (locked) {
             const angle = normalizeAngle(totalAngle);
+            // Plaats label iets voorbij de pijl in dezelfde richting
+            const labelDist = 22;
+            const labelX = endX + Math.cos(rad) * labelDist;
+            const labelY = endY + Math.sin(rad) * labelDist;
             ctx.fillStyle = '#00aa33';
             ctx.font = 'bold 16px Arial';
-            ctx.fillText(`${angle.toFixed(1)}°`, cA.x + 10, cA.y - 10);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            // Witte achtergrond voor leesbaarheid
+            const text = `${angle.toFixed(1)}°`;
+            const textWidth = ctx.measureText(text).width;
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.fillRect(labelX - textWidth/2 - 4, labelY - 10, textWidth + 8, 20);
+            ctx.fillStyle = '#00aa33';
+            ctx.fillText(text, labelX, labelY);
+            ctx.textAlign = 'start';
+            ctx.textBaseline = 'alphabetic';
         }
     });
 
