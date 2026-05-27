@@ -134,6 +134,39 @@ function drawLines() {
     ctx.globalAlpha = 1;
 }
 
+
+function showAnglesPanel(text) {
+    let panel = document.getElementById('angles-panel');
+    if (!panel) {
+        panel = document.createElement('div');
+        panel.id = 'angles-panel';
+        panel.style.position = 'fixed';
+        panel.style.bottom = '20px';
+        panel.style.right = '20px';
+        panel.style.background = 'rgba(255, 255, 255, 0.95)';
+        panel.style.border = '2px solid #00aa33';
+        panel.style.borderRadius = '8px';
+        panel.style.padding = '12px 16px';
+        panel.style.fontFamily = 'monospace';
+        panel.style.fontSize = '14px';
+        panel.style.color = '#00aa33';
+        panel.style.zIndex = '9999';
+        panel.style.maxWidth = '300px';
+        panel.style.whiteSpace = 'pre-line';
+        panel.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+        const closeBtn = document.createElement('span');
+        closeBtn.textContent = ' ✕';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.float = 'right';
+        closeBtn.style.color = '#999';
+        closeBtn.style.marginLeft = '10px';
+        closeBtn.onclick = () => panel.remove();
+        panel.appendChild(closeBtn);
+        document.body.appendChild(panel);
+    }
+    panel.innerHTML = text.replace(/\n/g, '<br>') + '<br><span style="cursor:pointer;color:#999;float:right" onclick="document.getElementById(\'angles-panel\').remove()">✕ sluit</span>';
+}
+
 // Bevries alle tandwielen op huidige positie + toon hoeken
 function freezeAll() {
     stopRotation();
@@ -147,8 +180,8 @@ function freezeAll() {
         output += `Tandwiel ${gear.id}: ${angle.toFixed(1)}°\n`;
     });
     drawLines();
-    console.log(output);
-    alert(output);
+    // console.log(output);
+    showAnglesPanel(output);
 }
 
 function renderGears() {
